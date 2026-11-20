@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111214">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Get the Interval Timer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#111214;--panel:#1b1c1f;--panel2:#24262a;--line:#2e3035;--text:#f3f1ec;--muted:#9a9a95;
+        --work:#ff5a36;--rest:#2fbf8f;--prep:#f2b63a}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+  body{padding:calc(20px + env(safe-area-inset-top,0px)) calc(18px + env(safe-area-inset-right,0px)) calc(32px + env(safe-area-inset-bottom,0px)) calc(18px + env(safe-area-inset-left,0px))}
+  button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+  .wrap{max-width:480px;margin:0 auto}
+  .cond{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase}
+  .eyebrow{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:44px;line-height:.95;text-transform:uppercase;margin:6px 0 10px;letter-spacing:.5px}
+  h1 span{color:var(--work)}
+  .lede{color:var(--muted);font-size:15px;line-height:1.55;margin:0 0 22px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}
+  .linkbox{display:block;width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:13px 12px;
+           font:14px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text);word-break:break-all;
+           -webkit-user-select:all;user-select:all;margin:10px 0 12px}
+  .copy{width:100%;height:60px;border-radius:16px;background:var(--work);color:#1a0b06;font-family:"Barlow Condensed",sans-serif;
+        font-weight:800;font-size:26px;letter-spacing:1.2px;text-transform:uppercase}
+  .copy.ok{background:var(--rest)}
+  .openbtn{display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:10px}
+  .small{font-size:13px;color:var(--muted);line-height:1.5;margin:14px 0 0}
+  .ghostcopy{width:100%;height:48px;border-radius:14px;background:var(--panel2);font-weight:700;font-size:15px}
+  .ghostcopy.ok{background:var(--rest);color:#0b1a14}
+  .copy:active{transform:scale(.985)}
+  .fallback{font-size:13px;color:var(--prep);margin-top:10px;line-height:1.45;display:none}
+  .fallback.show{display:block}
+
+  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:5px;margin:26px 0 16px}
+  .tab{height:46px;border-radius:12px;font-weight:700;font-size:15px;color:var(--muted)}
+  .tab[aria-selected="true"]{background:var(--panel2);color:var(--text)}
+
+  ol.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+  ol.steps>li{counter-increment:s;position:relative;padding:0 0 22px 52px}
+  ol.steps>li::before{content:counter(s);position:absolute;left:0;top:-2px;width:36px;height:36px;border-radius:50%;
+        background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;
+        font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:20px}
+  ol.steps>li:not(:last-child)::after{content:"";position:absolute;left:17.5px;top:38px;bottom:4px;width:1px;background:var(--line)}
+  .steps h3{margin:4px 0 4px;font-size:16px;font-weight:700}
+  .steps p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+  .steps p b{color:var(--text);font-weight:600}
+  .icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:-4px;width:24px;height:22px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);margin:0 2px}
+  .icon svg{width:14px;height:14px}
+  .mini{display:inline-block;margin-top:8px;padding:8px 12px;border-radius:10px;background:var(--panel2);font-size:13px;font-weight:600}
+  .alt{margin-top:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13px;color:var(--muted);line-height:1.5}
+  .alt b{color:var(--text)}
+
+  h2{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;letter-spacing:.8px;margin:30px 0 12px}
+  .tips{display:grid;gap:10px}
+  .tip{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .tip .e{font-size:20px;line-height:1}
+  .tip div{font-size:14px;line-height:1.5;color:var(--muted)}
+  .tip div b{color:var(--text)}
+  .open{display:block;text-align:center;margin-top:26px;color:var(--muted);font-size:14px}
+  .open a{color:var(--text);font-weight:600}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Workout timer · free · no sign-up</div>
+  <h1>Get the<br>Interval Timer<span>.</span></h1>
+  <p class="lede">Add it to your home screen once and it opens like an app. It takes about 30 seconds.</p>
+
+  <div class="card">
+    <div class="eyebrow">Step 1 · Open the timer</div>
+    <a class="copy openbtn" id="openBtn" href="./">Open the timer</a>
+    <div class="small">Opened this inside Instagram, WhatsApp or another app? Copy the link and paste it into <span id="browserName">Safari</span> instead.</div>
+    <div class="linkbox" id="link"></div>
+    <button class="ghostcopy" id="copyBtn">Copy link</button>
+    <div class="fallback" id="fallback">Copy didn't work on this phone. Press and hold the link above, then tap <b>Copy</b>.</div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-ios" aria-controls="ios" aria-selected="true"> iPhone</button>
+    <button class="tab" role="tab" id="tab-android" aria-controls="android" aria-selected="false">Android</button>
+  </div>
+
+  <!-- iPhone -->
+  <section id="ios" role="tabpanel" aria-labelledby="tab-ios">
+    <ol class="steps">
+      <li><h3>Open it in Safari</h3>
+        <p>Tap <b>Open the timer</b> above. Use <b>Safari</b>, the blue compass app, because other apps can't add it to your home screen properly.</p></li>
+      <li><h3>Tap Share</h3>
+        <p>Tap the share button <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#f3f1ec" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></span>. On newer iPhones it may be inside the <b>•••</b> button at the bottom right.</p></li>
+      <li><h3>Add to Home Screen</h3>
+        <p>Scroll down the list and tap <b>Add to Home Screen</b>. If you see an <b>Open as Web App</b> switch, leave it on.</p></li>
+      <li><h3>Tap Add</h3>
+        <p>It's now on your home screen as <b>Interval</b> and opens full screen like an app. Use it from there from now on.</p></li>
+    </ol>
+  </section>
+
+  <!-- Android -->
+  <section id="android" role="tabpanel" aria-labelledby="tab-android" hidden>
+    <ol class="steps">
+      <li><h3>Open it in Chrome</h3>
+        <p>Tap <b>Open the timer</b> above. It should open in <b>Chrome</b> (or Samsung Internet).</p></li>
+      <li><h3>Open the menu</h3>
+        <p>Tap the <b>⋮</b> button in the top right corner. Chrome may also show an <b>Install</b> banner at the bottom; tapping that works too.</p></li>
+      <li><h3>Install</h3>
+        <p>Tap <b>Add to Home screen</b> or <b>Install app</b>, then <b>Install</b>.</p></li>
+      <li><h3>Done</h3>
+        <p>It's now on your home screen as <b>Interval</b> and opens full screen like an app.</p></li>
+    </ol>
+    <div class="alt"><b>Samsung Internet:</b> open the timer, tap <b>☰</b> at the bottom, then <b>Add page to</b> → <b>Home screen</b>.</div>
+  </section>
+
+  <h2>Good to know</h2>
+  <div class="tips">
+    <div class="tip"><span class="e">🎵</span><div><b>Your music keeps playing.</b> The beeps play over Spotify, Apple Music or whatever you're listening to.</div></div>
+    <div class="tip" id="tipSilent"><span class="e">🔔</span><div><b>iPhone: turn off Silent mode</b> or you won't hear the beeps. Your music isn't affected either way.</div></div>
+    <div class="tip" id="tipVolume" hidden><span class="e">🔊</span><div><b>Android: beeps use your media volume</b>, the same as your music. Turn it up if you can't hear them.</div></div>
+    <div class="tip"><span class="e">👥</span><div><b>Training together?</b> One person taps <b>Start group</b>. Everyone else scans their QR code, or taps <b>Join group</b> and types the code on the leader's screen. All the phones start at the same second. </div></div>
+    <div class="tip"><span class="e">📱</span><div><b>Keep the screen on</b> while you train. If the beeps ever stop, tap the screen once to bring them back.</div></div>
+  </div>
+
+</div>
+
+<script>
+(() => {
+  const LINK = new URL("./", location.href).href;
+  const $ = id => document.getElementById(id);
+  $("link").textContent = LINK;
+
+  function select(el){
+    try{ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){}
+  }
+  function legacyCopy(){
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = LINK; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0"; ta.style.fontSize = "16px";
+      document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, LINK.length);
+      const ok = document.execCommand("copy"); ta.remove(); return ok;
+    }catch(e){ return false; }
+  }
+  function done(){
+    const b = $("copyBtn"); b.textContent = "Copied ✓ — now paste it into your browser"; b.classList.add("ok"); $("fallback").classList.remove("show");
+    setTimeout(() => { b.textContent = "Copy link"; b.classList.remove("ok"); }, 2500);
+  }
+  function failed(){ select($("link")); $("fallback").classList.add("show"); }
+
+  $("copyBtn").onclick = async () => {
+    try{ await navigator.clipboard.writeText(LINK); done(); }
+    catch(e){ legacyCopy() ? done() : failed(); }
+  };
+
+  function pick(os){
+    const ios = os === "ios";
+    $("tab-ios").setAttribute("aria-selected", ios); $("tab-android").setAttribute("aria-selected", !ios);
+    $("ios").hidden = !ios; $("android").hidden = ios;
+    $("tipSilent").hidden = !ios; $("tipVolume").hidden = ios;
+    $("browserName").textContent = ios ? "Safari" : "Chrome";
+  }
+  $("tab-ios").onclick = () => pick("ios");
+  $("tab-android").onclick = () => pick("android");
+  pick(/android/i.test(navigator.userAgent) ? "android" : "ios");
+})();
+</script>
+</body>
+</html>
